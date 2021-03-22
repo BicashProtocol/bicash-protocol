@@ -8,7 +8,7 @@ Bicash Protocol is the stable coin on Binance Smart Chain.
 | Cash | [](https://etherscan.io/token/) |
 | Share  | [](https://etherscan.io/token/) |
 | Treasury | [](https://etherscan.io/address/) |
-| Cash MasterChef | [](https://etherscan.io/address/) |
+| Boardroom | [](https://etherscan.io/address/) |
 | Share MasterChef | [](https://etherscan.io/address/) |
 | Timelock 24h | [](https://etherscan.io/address/#code) |
 
