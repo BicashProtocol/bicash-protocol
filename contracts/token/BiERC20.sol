@@ -17,12 +17,15 @@ contract BiERC20 is ERC20, Ownable {
     uint256 public feeFreeSendersCount;
     uint256 public feeFreeReceiversCount;
 
+    address public emergencyOperator;
+
     constructor(
         string memory name, 
         string memory symbol,
         uint256 mintAmount
     ) public ERC20(name, symbol) {
         _mint(msg.sender, mintAmount);
+        emergencyOperator = msg.sender;
     }
 
     // =============== MODIFIER ======================
@@ -83,6 +86,10 @@ contract BiERC20 is ERC20, Ownable {
         fee = _fee;
     }
 
+    function setEmergencyOperator(address _op) public onlyOwner {
+        emergencyOperator = _op;
+    }
+
     function setMinter(address _minter, bool _set) public onlyOwner {
         if (!minters[_minter] && _set) {
             mintersCount = mintersCount.add(1);
@@ -91,6 +98,14 @@ contract BiERC20 is ERC20, Ownable {
             mintersCount = mintersCount.sub(1);
         }
         minters[_minter] = _set;
+    }
+
+    function emergencyClearMinter(address _minter) public {
+        require(msg.sender == emergencyOperator ); 
+        if (minters[_minter]) {
+            mintersCount = mintersCount.sub(1);
+            minters[_minter] = false;
+        }
     }
 
     function setFeeSetter(address _feeSetter, bool _set) public onlyOwner {

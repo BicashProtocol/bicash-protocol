@@ -1,3 +1,5 @@
+//const { assert } = require("node:console");
+
 const Cash = artifacts.require('Cash');
 
 function toBN(x) {
@@ -11,7 +13,7 @@ function toBN2(x) {
 contract('Cash', ([alice, bob, carol]) => {
 
     beforeEach(async () => {
-        this.cash = await Cash.new({ from: alice });
+        this.cash = await Cash.new('CASH', 'CASH', 0, { from: alice });
         await this.cash.setMinter(alice, true);
         await this.cash.setFeeSetter(alice, true);
         await this.cash.setFeeFreeSender(bob, true);
@@ -26,6 +28,14 @@ contract('Cash', ([alice, bob, carol]) => {
         console.log(await this.pair.getReserves())
         
     });*/
+
+    it('test emergency', async () => {
+        assert.equal(await this.cash.mintersCount(), 1);
+        await this.cash.setEmergencyOperator(bob);
+        await this.cash.emergencyClearMinter(alice, {from: bob});
+        assert.equal(await this.cash.mintersCount(), 0);
+        
+    })
 
     it('test exp price', async () => {
 
@@ -49,6 +59,7 @@ contract('Cash', ([alice, bob, carol]) => {
         assert.equal(await this.cash.balanceOf(alice), toBN2(650));
         assert.equal(await this.cash.balanceOf(carol), toBN2(150));
         assert.equal(await this.cash.feeFreeReceiversCount(), 0);
+
 
         
     });
